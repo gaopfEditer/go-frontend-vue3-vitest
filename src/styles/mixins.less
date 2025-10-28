@@ -1,0 +1,66 @@
+// Less Mixins 混入示例
+
+// 清除浮动
+.clearfix() {
+  &::after {
+    content: "";
+    display: table;
+    clear: both;
+  }
+}
+
+// 文本省略号
+.text-ellipsis() {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+// 多行文本省略号
+.text-ellipsis-multiline(@lines: 2) {
+  display: -webkit-box;
+  -webkit-line-clamp: @lines;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+// 居中布局
+.flex-center() {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+// 响应式媒体查询
+.respond-to(@breakpoint) when (@breakpoint = xs) {
+  @media (max-width: @screen-xs) { & { content: ''; } }
+}
+.respond-to(@breakpoint) when (@breakpoint = sm) {
+  @media (max-width: @screen-sm) { & { content: ''; } }
+}
+.respond-to(@breakpoint) when (@breakpoint = md) {
+  @media (max-width: @screen-md) { & { content: ''; } }
+}
+.respond-to(@breakpoint) when (@breakpoint = lg) {
+  @media (max-width: @screen-lg) { & { content: ''; } }
+}
+
+// 按钮样式混入
+.button-style(@bg-color, @text-color: #fff, @border-radius: @border-radius-base) {
+  background-color: @bg-color;
+  color: @text-color;
+  border-radius: @border-radius;
+  border: none;
+  padding: @spacing-sm @spacing-md;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  
+  &:hover {
+    background-color: lighten(@bg-color, 10%);
+  }
+  
+  &:active {
+    background-color: darken(@bg-color, 10%);
+  }
+}

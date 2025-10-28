@@ -1,0 +1,29 @@
+:root {
+  --el-color-primary: var(--primary-color);
+  
+  --el-color-success: var(--success-color);
+  
+  --el-color-warning: var(--warning-color);
+  
+  --el-color-danger: var(--danger-color);
+  
+  --el-color-info: var(--info-color);
+  --el-button-size: 32px;  // 按钮高度
+  --el-button-padding-horizontal: 16px;  // 按钮水平内边距
+  --el-border-radius-base: 6px;  // 基础圆角
+  --el-border-radius-small: 4px;  // 小型元素圆角
+  
+  --el-button-size-small: 24px;  // 小按钮高度
+  --el-button-padding-horizontal-small: 12px;  // 小按钮水平内边距
+  .el-message--success {
+    background-color: rgb(235, 244, 247);
+    border-color: rgb(212, 223, 226);
+  }
+  
+  // --el-message-border-color: #e4e7ed;  // 添加边框色
+  // --el-message-padding: 10px 19px;  // 可选：调整内边距
+  // --el-message-box-shadow: 0 2px 12px 0 rgba(0,0,0,.1);  // 添加阴影效果
+
+  // 成功消息的文字颜色
+  --el-message-success-text-color: var(--success-color);  
+}

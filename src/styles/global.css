@@ -1,0 +1,141 @@
+/* 全局滚动条控制 - body 不滚动，由 layout 处理 */
+html, body {
+  height: 100%;
+  overflow: hidden; /* body 不出现滚动条 */
+  margin: 0;
+  padding: 0;
+}
+
+#app {
+  height: 100%;
+  overflow: hidden;
+}
+
+/* 页面通用布局样式 */
+.page-container {
+  padding: 1.5rem;
+}
+
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.page-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+/* 表格通用样式 */
+.table-container {
+  margin-top: 1rem;
+}
+
+.table-container .el-table {
+  --el-table-border-color: var(--border-color);
+  --el-table-header-bg-color: #f5f7fa;
+  --el-table-row-hover-bg-color: var(--hover-bg);
+  --el-table-header-text-color: var(--text-primary);
+}
+
+.table-container .el-table__header {
+  font-weight: 600;
+}
+
+.table-container .el-table__header-wrapper {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+
+.table-container .el-table__header th {
+  background-color: #f5f7fa !important;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.table-container .el-table__fixed-header-wrapper {
+  z-index: 2;
+}
+
+/* 搜索栏样式 */
+.search-bar {
+  margin-bottom: 1rem;
+  max-width: 300px;
+}
+
+/* 对话框通用样式 */
+.dialog-form {
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+.dialog-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+/* 按钮组样式 */
+.button-group {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.el-table {
+  --el-table-border-color: #edf2f7;
+  --el-table-header-bg-color: var(--primary-bg);
+  --el-table-row-hover-bg-color: var(--primary-bg);
+  font-size: 0.95rem;
+}
+
+.el-table th.el-table__cell {
+  border-bottom: 1px solid #edf2f7 !important;
+  border-right: 1px solid #edf2f7 !important;
+  background-color: var(--primary-bg) !important;
+  color: var(--primary-color);
+}
+
+.el-table td.el-table__cell {
+  border-right: 1px solid #edf2f7 !important;
+}
+
+.el-table th {
+  font-weight: 600;
+  font-size: 1rem;
+  height: 50px;
+}
+
+.el-table td{
+  padding: 12px 0;
+}
+
+.el-button {
+  padding: 8px 16px;
+  font-size: 0.9rem;
+}
+
+.el-input__wrapper {
+  box-shadow: 0 0 0 1px var(--border-color);
+  padding: 4px 11px;
+}
+
+.el-input__wrapper:hover {
+  box-shadow: 0 0 0 1px var(--primary-color);
+}
+
+.el-input__inner {
+  font-size: 0.95rem;
+}
+
+.el-dialog__title {
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+.el-dialog__body {
+  padding: 1.5rem;
+}

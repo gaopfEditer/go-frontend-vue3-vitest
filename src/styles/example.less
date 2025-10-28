@@ -1,0 +1,90 @@
+// Less 使用示例文件
+
+@import './variables.less';
+@import './mixins.less';
+
+// 示例组件样式
+.example-component {
+  .clearfix();
+  
+  .title {
+    font-size: @font-size-large;
+    color: @primary-color;
+    .text-ellipsis();
+  }
+  
+  .content {
+    padding: @spacing-md;
+    background: #f5f5f5;
+    border-radius: @border-radius-base;
+    
+    .text {
+      .text-ellipsis-multiline(3);
+      line-height: 1.6;
+    }
+  }
+  
+  .button-group {
+    .flex-center();
+    gap: @spacing-sm;
+    margin-top: @spacing-md;
+    
+    .btn {
+      .button-style(@primary-color);
+      
+      &.success {
+        .button-style(@success-color);
+      }
+      
+      &.warning {
+        .button-style(@warning-color);
+      }
+      
+      &.danger {
+        .button-style(@danger-color);
+      }
+    }
+  }
+  
+  // 嵌套选择器示例
+  .form {
+    .form-item {
+      margin-bottom: @spacing-md;
+      
+      .label {
+        display: block;
+        margin-bottom: @spacing-xs;
+        font-weight: bold;
+        color: @info-color;
+      }
+      
+      .input {
+        width: 100%;
+        padding: @spacing-sm;
+        border: 1px solid #ddd;
+        border-radius: @border-radius-small;
+        
+        &:focus {
+          border-color: @primary-color;
+          outline: none;
+          box-shadow: 0 0 0 2px fade(@primary-color, 20%);
+        }
+      }
+    }
+  }
+  
+  // 响应式设计示例
+  .responsive-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: @spacing-md;
+    
+    @media (max-width: @screen-md) {
+      grid-template-columns: repeat(2, 1fr);
+    }
+    
+    @media (max-width: @screen-sm) {
+      grid-template-columns: 1fr;
+    }
+  }
+}
