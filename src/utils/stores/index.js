@@ -4,12 +4,19 @@ import router from '../../router'
 import { message } from '../message'
 
 export const useStore = defineStore('main', {
-  state: () => ({
-    token: localStorage.getItem('token') || '',
-    userInfo: null,
-    products: [],
-    devices: []
-  }),
+  state: () => {
+    // 安全地获取 token，避免在构建时出错
+    let token = ''
+    if (typeof window !== 'undefined' && window.localStorage) {
+      token = localStorage.getItem('token') || ''
+    }
+    return {
+      token,
+      userInfo: null,
+      products: [],
+      devices: []
+    }
+  },
 
   getters: {
     isAuthenticated: (state) => !!state.token

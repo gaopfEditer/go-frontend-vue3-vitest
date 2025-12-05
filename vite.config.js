@@ -1,9 +1,23 @@
 import { defineConfig } from 'vitest/config'
 import vue from '@vitejs/plugin-vue'
 import path from 'path'
+import { fileURLToPath } from 'url'
 import fs from 'fs'; // 引入 fs 模块
 
-const styleCssContent = fs.readFileSync(path.resolve(__dirname, 'src/styles/style.css'), 'utf-8'); // 读取 style.css 文件内容
+// ES 模块中获取 __dirname 的替代方法
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = path.dirname(__filename)
+
+// 读取 style.css 文件内容（在配置加载时执行）
+let styleCssContent = ''
+try {
+  const styleCssPath = path.resolve(__dirname, 'src/styles/style.css')
+  if (fs.existsSync(styleCssPath)) {
+    styleCssContent = fs.readFileSync(styleCssPath, 'utf-8')
+  }
+} catch (error) {
+  // 静默失败，使用空字符串
+}
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -22,11 +36,11 @@ export default defineConfig({
     preprocessorOptions: {
       scss: {
         // 将 style.css 的内容注入到每个 scss 文件
-        additionalData: `${styleCssContent}`
+        additionalData: styleCssContent
       },
       less: {
         // Less 配置
-        additionalData: `${styleCssContent}`,
+        additionalData: styleCssContent,
         modifyVars: {
           // 可以在这里定义 Less 变量
         }
@@ -37,7 +51,7 @@ export default defineConfig({
     force: true, // 强制重新构建优化的依赖
     proxy: {
       '/activate': {
-        target: 'http://localhost:17080',
+        target: 'https://localhost:17080',
         changeOrigin: true,
         secure: false
       }

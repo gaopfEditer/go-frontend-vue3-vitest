@@ -46,6 +46,10 @@
             <el-icon><Document /></el-icon>
             <span>{{ t('auditLog.title') }}</span>
           </router-link>
+          <router-link to="/post" class="nav-item" :class="{ active: $route.path === '/post' }" @click="isMobileScreen && closeSidebar()">
+            <el-icon><Box /></el-icon>
+            <span>文章管理</span>
+          </router-link>
           <router-link to="/" class="nav-item" :class="{ active: $route.path === '/' }" @click="isMobileScreen && closeSidebar()">
             <el-icon><Box /></el-icon>
             <span>{{ t('products.title') }}</span>

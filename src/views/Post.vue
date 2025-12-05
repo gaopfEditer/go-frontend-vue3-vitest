@@ -1,59 +1,46 @@
 <template>
   <div class="products">
     <div class="header">
-      <h2>{{ t('products.title') }}</h2>
+      <h2>{{ t('post.title') }}</h2>
       <el-button type="primary" @click="showAddDialog = true">
-        {{ t('products.addButton') }}
+        {{ t('post.addButton') }}
       </el-button>
     </div>
 
     <div class="search-bar">
-      <el-input v-model="searchQuery" :placeholder="t('products.searchPlaceholder')" prefix-icon="Search" clearable
+      <el-input v-model="searchQuery" :placeholder="t('post.searchPlaceholder')" prefix-icon="Search" clearable
         @clear="handleSearch" @input="handleSearch">
       </el-input>
     </div>
 
     <div class="product-list">
-      <el-table v-loading="loading" :data="filteredProducts" style="width: 100%" :empty-text="t('products.empty')"
+      <el-table v-loading="loading" :data="filteredProducts" style="width: 100%" :empty-text="t('post.empty')"
         stripe border>
         <el-table-column type="expand">
           <template #default="props">
             <div class="expanded-content">
               <div class="info-item">
-                <span class="label">{{ t('products.table.createTime') }}:</span>
+                <span class="label">{{ t('post.table.createTime') }}:</span>
                 <span class="value">{{ formatDateTime(props.row.created_at) }}</span>
               </div>
               <div class="info-item">
-                <span class="label">{{ t('products.table.updateTime') }}:</span>
+                <span class="label">{{ t('post.table.updateTime') }}:</span>
                 <span class="value">{{ formatDateTime(props.row.updated_at) }}</span>
               </div>
             </div>
           </template>
         </el-table-column>
-        <el-table-column type="index" :label="t('products.table.index')" width="60" align="center" />
-        <el-table-column prop="code" :label="t('products.table.code')" sortable min-width="120" />
-        <el-table-column :label="t('products.table.image')" width="100" align="center">
-          <template #default="{ row }">
-            <el-image
-              v-if="row.image_url"
-              :src="row.image_url"
-              :preview-src-list="[row.image_url]"
-              fit="cover"
-              style="width: 60px; height: 60px; border-radius: 4px; cursor: pointer;"
-              :preview-teleported="true"
-            />
-            <span v-else style="color: #999;">-</span>
-          </template>
-        </el-table-column>
-        <el-table-column prop="product_name" :label="t('products.table.name')" sortable min-width="120" />
-        <el-table-column prop="product_type" :label="t('products.table.type')" sortable min-width="100" />
-        <el-table-column :label="t('products.table.mainManager')" sortable min-width="140"
+        <el-table-column type="index" :label="t('post.table.index')" width="60" align="center" />
+        <el-table-column prop="code" :label="t('post.table.code')" sortable min-width="120" />
+        <el-table-column prop="title" :label="t('post.table.name')" sortable min-width="120" />
+        <el-table-column prop="slug" :label="t('post.table.type')" sortable min-width="100" />
+        <el-table-column :label="t('post.table.mainManager')" sortable min-width="140"
           :sort-method="sortByMainManager">
           <template #default="{ row }">
             {{row.edges?.managers?.find(m => m.role === 'main')?.edges?.user?.email || '-'}}
           </template>
         </el-table-column>
-        <el-table-column :label="t('products.table.actions')" width="300" fixed="right" align="center">
+        <el-table-column :label="t('post.table.actions')" width="300" fixed="right" align="center">
           <template #default="{ row }">
             <el-button-group v-if="canShowManageButtons">
               <el-button type="success" size="small" @click="managePermissions(row)">
@@ -85,100 +72,69 @@
     </div>
 
     <el-dialog v-model="dialogVisible"
-      :title="editingProduct ? t('products.dialog.editTitle') : t('products.dialog.addTitle')" width="30%"
+      :title="editingProduct ? t('post.dialog.editTitle') : t('post.dialog.addTitle')" width="30%"
       custom-class="product-dialog">
       <form @submit.prevent="handleSubmit">
         <div class="form-group">
-          <label>{{ t('products.dialog.code') }}</label>
+          <label>{{ t('post.dialog.code') }}</label>
           <el-input v-model="form.code" required :disabled="!!editingProduct" />
         </div>
         <div class="form-group">
-          <label>{{ t('products.dialog.name') }}</label>
-          <el-input v-model="form.product_name" required />
+          <label>{{ t('post.dialog.name') }}</label>
+          <el-input v-model="form.title" required />
         </div>
         <div class="form-group">
-          <label>{{ t('products.dialog.type') }}</label>
-          <el-input v-model="form.product_type" required />
-        </div>
-        <div class="form-group">
-          <label>{{ t('products.dialog.image') }}</label>
-          <div class="image-upload-container">
-            <el-upload
-              class="image-uploader"
-              :action="uploadAction"
-              :headers="uploadHeaders"
-              name="file"
-              :show-file-list="false"
-              :on-success="handleImageSuccess"
-              :on-error="handleImageError"
-              :before-upload="beforeImageUpload"
-              accept="image/*"
-            >
-              <el-image
-                v-if="form.image_url"
-                :src="form.image_url"
-                class="uploaded-image"
-                fit="cover"
-              />
-              <el-icon v-else class="uploader-icon"><Plus /></el-icon>
-            </el-upload>
-            <el-input
-              v-model="form.image_url"
-              :placeholder="t('products.dialog.imageUrlPlaceholder')"
-              style="margin-top: 10px;"
-            >
-              <template #prepend>{{ t('products.dialog.imageUrl') }}</template>
-            </el-input>
-          </div>
+          <label>{{ t('post.dialog.type') }}</label>
+          <el-input v-model="form.slug" required />
         </div>
         <div class="dialog-buttons">
-          <el-button @click="closeDialog">{{ t('products.dialog.cancel') }}</el-button>
+          <el-button @click="closeDialog">{{ t('post.dialog.cancel') }}</el-button>
           <el-button type="primary" native-type="submit">
-            {{ t('products.dialog.confirm') }}
+            {{ t('post.dialog.confirm') }}
           </el-button>
         </div>
       </form>
     </el-dialog>
 
     <!-- 新增权限管理对话框 -->
-    <el-dialog v-model="permissionsDialogVisible" :title="t('products.permissionDialog.title')" width="50%"
+    <el-dialog v-model="permissionsDialogVisible" :title="t('post.permissionDialog.title')" width="50%"
       custom-class="permissions-dialog">
       <div v-if="currentProduct" class="permissions-container">
         <div class="product-title">
-          <span class="title-label">{{ t('products.permissionDialog.productName') }}:</span>
-          <span class="title-value">{{ currentProduct.product_name }}</span>
+          <span class="title-label">{{ t('post.permissionDialog.productName') }}:</span>
+          <span class="title-value">{{ currentProduct.title }}</span>
         </div>
         <!-- 管理员列表 -->
         <div class="managers-list">
           <el-table :data="managers" style="width: 100%" border height="400" :max-height="400">
-            <el-table-column prop="edges.user.email" :label="t('products.permissionDialog.email')" fixed />
-            <el-table-column :label="t('products.permissionDialog.role')" width="150">
+            <el-table-column prop="edges.user.email" :label="t('post.permissionDialog.email')" fixed />
+            <el-table-column :label="t('post.permissionDialog.role')" width="150">
               <template #default="{ row }">
                 <el-tag type="danger" v-if="row.role === 'main'">
-                  {{ t('products.permissionDialog.mainManager') }}
+                  {{ t('post.permissionDialog.mainManager') }}
                 </el-tag>
                 <el-tag v-else class="clickable-tag" @click="handleRoleClick(row)" style="cursor: pointer;">
-                  {{ t('products.permissionDialog.manager') }}
+                  {{ t('post.permissionDialog.manager') }}
                 </el-tag>
               </template>
             </el-table-column>
-            <el-table-column :label="t('products.permissionDialog.permissions')" width="180">
+            <el-table-column :label="t('post.permissionDialog.permissions')" width="180">
               <template #default="{ row }">
                 <el-select v-model="row.permissions" :disabled="!canEditPermissions || row.role === 'main'"
                   @change="updateManagerPermission(row)">
-                  <el-option value="full" :label="t('products.permissionDialog.permFull')" />
-                  <el-option value="read" :label="t('products.permissionDialog.permRead')" />
+                  <el-option value="full" :label="t('post.permissionDialog.permFull')" />
+                  <el-option value="read" :label="t('post.permissionDialog.permRead')" />
                 </el-select>
               </template>
             </el-table-column>
-            <el-table-column prop="remark" :label="t('products.permissionDialog.remark')" width="200">
+            <el-table-column prop="remark" :label="t('post.permissionDialog.remark')" width="200">
               <template #default="{ row }">
                 <el-input v-model="row.remark" size="small" :disabled="!canEditPermissions || row.role === 'main'"
                   @blur="updateManagerRemark(row)"
-                  :placeholder="t('products.permissionDialog.remarkPlaceholder')"></el-input>
+                  :placeholder="t('post.permissionDialog.remarkPlaceholder')"></el-input>
               </template>
             </el-table-column>
-            <el-table-column :label="t('products.permissionDialog.actions')" width="100" align="center" fixed="right">
+            <el-table-column :label="t('post.permissionDialog.actions')" width="100" align="center" fixed="right">
               <template #default="{ row }">
                 <el-button v-if="row.role !== 'main' && canEditPermissions" type="danger" :icon="Delete" size="small"
                   @click="removeManager(row)"></el-button>
@@ -205,44 +161,44 @@
       <template #footer>
         <span class="dialog-footer">
           <el-button v-if="canEditPermissions" type="primary" @click="showAddManagerDialog = true">
-            {{ t('products.permissionDialog.addManager') }}
+            {{ t('post.permissionDialog.addManager') }}
           </el-button>
           <el-button @click="permissionsDialogVisible = false">
-            {{ t('products.permissionDialog.close') }}
+            {{ t('post.permissionDialog.close') }}
           </el-button>
         </span>
       </template>
     </el-dialog>
 
     <!-- 添加管理员对话框 -->
-    <el-dialog v-model="showAddManagerDialog" :title="t('products.permissionDialog.addManager')" width="30%">
+    <el-dialog v-model="showAddManagerDialog" :title="t('post.permissionDialog.addManager')" width="30%">
       <el-form label-position="left" label-width="100px" style="max-width: 400px; margin: 0 auto;">
-        <el-form-item :label="t('products.permissionDialog.email')">
+        <el-form-item :label="t('post.permissionDialog.email')">
           <el-input v-model="newManagerEmail" 
-            :placeholder="t('products.permissionDialog.enterEmail')"
+            :placeholder="t('post.permissionDialog.enterEmail')"
             clearable />
         </el-form-item>
-        <el-form-item :label="t('products.permissionDialog.remark')">
+        <el-form-item :label="t('post.permissionDialog.remark')">
           <el-input v-model="newManagerRemark" 
-            :placeholder="t('products.permissionDialog.remarkPlaceholder')"
+            :placeholder="t('post.permissionDialog.remarkPlaceholder')"
             clearable />
         </el-form-item>
-        <el-form-item :label="t('products.permissionDialog.permissions')">
+        <el-form-item :label="t('post.permissionDialog.permissions')">
           <el-select v-model="newManagerPermission" 
-            :placeholder="t('products.permissionDialog.selectPerm')"
+            :placeholder="t('post.permissionDialog.selectPerm')"
             clearable
             style="width: 100%;">
-            <el-option value="full" :label="t('products.permissionDialog.permFull')" />
-            <el-option value="read" :label="t('products.permissionDialog.permRead')" />
+            <el-option value="full" :label="t('post.permissionDialog.permFull')" />
+            <el-option value="read" :label="t('post.permissionDialog.permRead')" />
           </el-select>
         </el-form-item>
         <el-form-item>
           <div class="dialog-footer" style="display: flex; width: 100%;">
             <el-button @click="showAddManagerDialog = false">
-              {{ t('products.permissionDialog.close') }}
+              {{ t('post.permissionDialog.close') }}
             </el-button>
             <el-button type="primary" @click="addManager">
-              {{ t('products.permissionDialog.add') }}
+              {{ t('post.permissionDialog.add') }}
             </el-button>
           </div>
         </el-form-item>
@@ -254,10 +210,10 @@
 <script setup>
 import { ref, reactive, onMounted, computed, watch } from 'vue'
 import { useStore } from '../utils/stores'
-import { product } from '../utils/api'
+import { post as product } from '../utils/api'
 import { useI18n } from 'vue-i18n'
 import { message } from '../utils/message'
-import { Search, Delete, Plus } from '@element-plus/icons-vue'
+import { Search, Delete } from '@element-plus/icons-vue'
 import { ElMessageBox } from 'element-plus'
 
 const { t } = useI18n()
@@ -276,9 +232,8 @@ const pagination = reactive({
 
 const form = reactive({
   code: '',
-  product_name: '',
-  product_type: '',
-  image_url: ''
+  title: '',
+  slug: ''
 })
 
 const dialogVisible = computed({
@@ -405,9 +360,8 @@ const closeDialog = () => {
   editingProduct.value = null
   Object.assign(form, {
     code: '',
-    product_name: '',
-    product_type: '',
-    image_url: ''
+    title: '',
+    slug: ''
   })
 }
 
@@ -520,8 +474,8 @@ const handleManagersSizeChange = (size) => {
 const handleRoleClick = async (manager) => {
   try {
     await ElMessageBox.confirm(
-      t('products.permissionDialog.setMainConfirm'),
-      t('products.permissionDialog.setMainTitle'),
+      t('post.permissionDialog.setMainConfirm'),
+      t('post.permissionDialog.setMainTitle'),
       {
         confirmButtonText: t('common.confirm'),
         cancelButtonText: t('common.cancel'),
@@ -638,7 +592,7 @@ const removeManager = async (manager) => {
 // 添加管理员
 const addManager = async () => {
   if (!newManagerEmail.value) {
-    message.error(t('products.permissionDialog.emailRequired','form'))
+    message.error(t('post.permissionDialog.emailRequired','form'))
     return
   }
 
@@ -667,70 +621,6 @@ const addManager = async () => {
   } catch (error) {
     message.error(error.message,'server')
   }
-}
-
-// 图片上传相关
-const uploadAction = ref('/activate/product/upload-image') // 图片上传接口
-const uploadHeaders = computed(() => {
-  const store = useStore()
-  const headers = {}
-  if (store.token) {
-    headers['Authorization'] = `Bearer ${store.token}`
-  }
-  return headers
-})
-
-// 图片上传成功回调
-const handleImageSuccess = (response) => {
-  // 根据后端返回的数据结构设置image_url
-  // 后端可能返回的格式：
-  // { code: 200, data: { url: '...' } } 或 { code: 200, data: { image_url: '...' } }
-  // 或 { url: '...' } 或 { image_url: '...' }
-  let imageUrl = null
-  
-  if (response) {
-    // 处理标准响应格式 { code: 200, data: { url: '...' } }
-    if (response.data) {
-      imageUrl = response.data.url || response.data.image_url
-    }
-    // 处理直接返回URL的格式 { url: '...' }
-    if (!imageUrl) {
-      imageUrl = response.url || response.image_url
-    }
-  }
-  
-  if (imageUrl) {
-    form.image_url = imageUrl
-    message.success(t('message.success.upload') || '图片上传成功')
-  } else {
-    // 如果响应格式不符合预期，提示用户手动输入URL
-    console.warn('上传响应格式不符合预期:', response)
-    message.warning(t('message.warning.uploadFormat') || '上传成功，但无法获取图片URL，请手动输入')
-  }
-}
-
-// 图片上传失败回调
-const handleImageError = (error) => {
-  console.error('Image upload error:', error)
-  const errorMsg = error?.response?.data?.message || error?.message || '上传失败'
-  message.error(errorMsg || t('message.error.upload') || '图片上传失败，请直接在下方输入框中输入图片URL')
-}
-
-// 图片上传前验证
-const beforeImageUpload = (file) => {
-  const isImage = file.type.startsWith('image/')
-  const isLt2M = file.size / 1024 / 1024 < 2
-
-  if (!isImage) {
-    message.error(t('message.error.imageType') || '只能上传图片文件!')
-    return false
-  }
-  if (!isLt2M) {
-    message.error(t('message.error.imageSize') || '图片大小不能超过 2MB!')
-    return false
-  }
-  
-  return true
 }
 
 onMounted(loadProducts)
@@ -913,47 +803,5 @@ onMounted(loadProducts)
   margin-top: 20px;
   display: flex;
   justify-content: flex-end;
-}
-
-/* 图片上传相关样式 */
-.image-upload-container {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.image-uploader {
-  width: 100%;
-}
-
-.image-uploader :deep(.el-upload) {
-  border: 1px dashed var(--el-border-color);
-  border-radius: 6px;
-  cursor: pointer;
-  position: relative;
-  overflow: hidden;
-  transition: var(--el-transition-duration-fast);
-  width: 100%;
-  height: 180px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background-color: var(--el-fill-color-light);
-}
-
-.image-uploader :deep(.el-upload:hover) {
-  border-color: var(--el-color-primary);
-}
-
-.uploaded-image {
-  width: 100%;
-  height: 180px;
-  object-fit: cover;
-  border-radius: 6px;
-}
-
-.uploader-icon {
-  font-size: 28px;
-  color: var(--el-text-color-placeholder);
 }
 </style>

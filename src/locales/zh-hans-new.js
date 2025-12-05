@@ -6,6 +6,7 @@ import message from './modules/message.js'
 import products from './modules/products.js'
 import auditLog from './modules/auditLog.js'
 import menu from './modules/menu.js'
+import post from './modules/post.js'
 
 // 许可证类型模块
 const licenseTypes = {
@@ -227,6 +228,7 @@ export default {
   login: auth.login,
   register: auth.register,
   message,
+  post, 
   products,
   licenseTypes,
   productFeatures,

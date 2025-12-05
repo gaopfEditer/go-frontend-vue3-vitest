@@ -4,6 +4,7 @@ export default {
   addButton: 'Add Product',
   table: {
     code: 'Product Code',
+    image: 'Product Image',
     name: 'Product Name', 
     type: 'Product Type',
     index: 'No.',
@@ -19,6 +20,10 @@ export default {
     code: 'Product Code',
     name: 'Product Name',
     type: 'Product Type',
+    image: 'Product Image',
+    imageUpload: 'Upload Image',
+    imageUrl: 'Image URL',
+    imageUrlPlaceholder: 'Enter image URL or upload image',
     cancel: 'Cancel',
     confirm: 'Confirm'
   },

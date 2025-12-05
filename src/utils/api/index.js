@@ -18,6 +18,13 @@ export const product = {
   removeManager: (managerId) => getRequest(`/activate/product/remove-manager?manager_id=${managerId}`)
 }
 
+export const post = {
+  list: (params = {}) => getRequest('/activate/post/list', params),
+  add: (data) => postRequest('/activate/post/add', data),
+  modify: (data) => postRequest('/activate/post/put', data),
+  delete: (postId) => getRequest(`/activate/post/del?post_id=${postId}`)
+}
+
 // License Type APIs
 export const licenseType = {
   list: (productId, params = {}) => getRequest(`/activate/license-type/list?product_id=${productId}`, params),

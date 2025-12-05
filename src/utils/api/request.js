@@ -17,7 +17,9 @@ service.interceptors.request.use(
     }
     
     // 添加语言header
-    const locale = localStorage.getItem('locale') || 'zh-hans'
+    const locale = (typeof window !== 'undefined' && window.localStorage) 
+      ? localStorage.getItem('locale') || 'zh-hans'
+      : 'zh-hans'
     // 根据locale设置Language header
     // 0: "en", 1: "zh-hans"
     let languageCode = 1 // 默认为中文

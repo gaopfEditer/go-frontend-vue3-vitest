@@ -1,11 +1,13 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import { useStore } from '../utils/stores'
+import { initWebVitals, observeExtras, trackRouteView, startSoftLCP } from '../utils/metrics'
 import Products from '../views/Products.vue'
 import LicenseTypes from '../views/LicenseTypes.vue'
 import ProductFeatures from '../views/ProductFeatures.vue'
 import FirmwareVersions from '../views/FirmwareVersions.vue'
 import SoftwareVersions from '../views/SoftwareVersions.vue'
 import Devices from '../views/Devices.vue'
+import Post from '../views/Post.vue'
 
 const routes = [
   {
@@ -23,6 +25,18 @@ const routes = [
         path: '',
         name: 'Products',
         component: Products,
+        meta: { exact: true }
+      },
+      {
+        path: 'post',
+        name: 'Post',
+        component: Post,
+        meta: { exact: true }
+      },
+      {
+        path: 'metrics-preview',
+        name: 'MetricsPreview',
+        component: () => import('../views/MetricsPreview.vue'),
         meta: { exact: true }
       },
       {
@@ -83,3 +97,12 @@ router.beforeEach((to, from, next) => {
 })
 
 export default router
+
+router.afterEach((to, from) => {
+  const pageId = `${to.fullPath}#${Date.now()}`
+  const routeCtx = { page: to.fullPath, pageId }
+  initWebVitals(routeCtx)
+  observeExtras(routeCtx)
+  trackRouteView(routeCtx, from, to)
+  startSoftLCP(routeCtx)
+})

@@ -8,7 +8,14 @@ import { useI18n } from 'vue-i18n'
 
 const { t, locale: i18nLocale } = useI18n()
 const store = useStore()
-const locale = ref(localStorage.getItem('locale') || 'zh-hans')
+// 安全地获取 locale，避免在构建时出错
+const getInitialLocale = () => {
+  if (typeof window !== 'undefined' && window.localStorage) {
+    return localStorage.getItem('locale') || 'zh-hans'
+  }
+  return 'zh-hans'
+}
+const locale = ref(getInitialLocale())
 const elementLocale = ref(locale.value === 'zh-hans' ? zhCn : en)
 
 // 更新HTML的lang属性

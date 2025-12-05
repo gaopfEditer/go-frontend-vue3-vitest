@@ -71,6 +71,10 @@ export default {
       setMainConfirm: '确定要将此用户设置为主管理员吗？当前主管理员将变为普通管理员。'
     },
   },
+  post: {
+    title: '文章管理',
+    addButton: '添加文章',
+  },
   licenseTypes: {
     title: '许可证类型管理',
     manageTypes: '管理',
